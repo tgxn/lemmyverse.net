@@ -1,4 +1,4 @@
-name: publish-lemmyverse-pages
+name: publish-lemmyverse
 
 on:
   # Allows you to run this workflow manually from the Actions tab
