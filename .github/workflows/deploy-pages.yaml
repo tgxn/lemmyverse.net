@@ -92,26 +92,36 @@ jobs:
       
       - name: lets try copying index.html to every possible path we use
         run: |
-          CREATE_PATHS=(
-            "join"
-            "about"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
 
-            "inspect"
-            "inspect/versions"
-            "inspect/sus"
-            "inspect/version-chart"
+          const root = path.join('frontend', 'dist');
+          const src = path.join(root, 'index.html');
+          if (!fs.existsSync(src)) {
+            console.error(`source not found: ${src}`);
+            process.exit(1);
+          }
 
-            "instance"
-            "communities"
-            "mbin/magazines"
-            "piefed/communities"
-          )
+          const paths = [
+            'join',
+            'about',
+            'inspect',
+            'inspect/versions',
+            'inspect/sus',
+            'inspect/version-chart',
+            'instance',
+            'communities',
+            'mbin/magazines',
+            'piefed/communities'
+          ];
 
-          for PATH in "${CREATE_PATHS[@]}"; do
-            DEST_DIR="./frontend/dist/${PATH}"
-            mkdir -p "${DEST_DIR}"
-            cp ./frontend/dist/index.html "${DEST_DIR}/index.html"
-          done
+          for (const p of paths) {
+            const dest = path.join(root, p);
+            fs.mkdirSync(dest, { recursive: true });
+            fs.copyFileSync(src, path.join(dest, 'index.html'));
+          }
+          NODE
 
       # upload pages
       - name: upload github pages artifacts
