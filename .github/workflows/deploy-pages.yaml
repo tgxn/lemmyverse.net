@@ -84,8 +84,26 @@ jobs:
         run: yarn build
         working-directory: ./frontend
 
-      - name: lets try copying index.html to 404.html
-        run: cp ./frontend/dist/index.html ./frontend/dist/404.html
+      # - name: lets try copying index.html to 404.html
+      #   run: cp ./frontend/dist/index.html ./frontend/dist/404.html
+
+      # https://github.com/orgs/community/discussions/64096#discussioncomment-14768156
+      # ughh, it's 2026 now, GitHub Pages STILL doesn't support single page apps with client side routing properly!
+      
+      - name: lets try copying index.html to every possible path we use
+        run: |
+          CREATE_PATHS=(
+            "join"
+            "inspect"
+            "instance"
+            "communities"
+          )
+
+          for PATH in "${CREATE_PATHS[@]}"; do
+            DEST_DIR="./frontend/dist/${PATH}"
+            mkdir -p "${DEST_DIR}"
+            cp ./frontend/dist/index.html "${DEST_DIR}/index.html"
+          done
 
       # upload pages
       - name: upload github pages artifacts
