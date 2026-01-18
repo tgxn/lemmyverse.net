@@ -94,9 +94,17 @@ jobs:
         run: |
           CREATE_PATHS=(
             "join"
+            "about"
+
             "inspect"
+            "inspect/versions"
+            "inspect/sus"
+            "inspect/version-chart"
+
             "instance"
             "communities"
+            "mbin/magazines"
+            "piefed/communities"
           )
 
           for PATH in "${CREATE_PATHS[@]}"; do
